@@ -38,4 +38,19 @@ public class Field {
 			}
 		}
 	}
+
+	//•	toString() – overridden function prints out a numbered grid with the contents of each location. 
+	//Please note that rows and columns should align as below. 
+	//You can assume the grid will be no larger than 10x10, but may be any smaller size. 
+	//The grid below shows an empty field with all Soil.
+	@Override
+	public String toString(){
+		for (int y = 0; y < field.length; y++){
+			for (int x = 0; x < field[y].length; x++){
+				current_tile = field[y][x];
+				current_tile.toString();
+			}
+		}
+		return "";
+	}
 }
