@@ -22,7 +22,7 @@ public class Grain extends Food{
     }
 
     //getGenerationCount returns the total number of grain objects that have been instantiated.
-    public int getGenerationCount(){
+    public static int getGenerationCount(){
         return generationCount;
     }
 }

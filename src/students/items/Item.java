@@ -23,7 +23,7 @@ public abstract class Item {
     }
     //returns whether the item’s age is greater than it’s death age
     public boolean died(){
-        if (age >= deathAge){
+        if (age > deathAge){
             return true;
         }
         return false;
