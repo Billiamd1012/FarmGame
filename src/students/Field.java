@@ -8,6 +8,8 @@ import students.items.Weed;
 public class Field {
 	private Item[][] field;
 	private Item current_tile;
+	private String current_row;
+	private String all_rows;
 
 	public Field(int height, int width)
 	{
@@ -41,16 +43,33 @@ public class Field {
 
 	//•	toString() – overridden function prints out a numbered grid with the contents of each location. 
 	//Please note that rows and columns should align as below. 
-	//You can assume the grid will be no larger than 10x10, but may be any smaller size. 
-	//The grid below shows an empty field with all Soil.
 	@Override
 	public String toString(){
-		for (int y = 0; y < field.length; y++){
-			for (int x = 0; x < field[y].length; x++){
-				current_tile = field[y][x];
-				current_tile.toString();
+		//print out each row of items
+		for (int y = 0; y <= field.length; y++){
+			//for first row print out spacer for col count
+			if (y == 0){
+				current_row += " ";
 			}
+			// else print out row count
+			else{
+				current_row += y;
+			}
+			
+			for (int x = 0; x <= field[y].length; x++){
+				//if first row append col number 
+				if (y == 0){
+					current_row += x + 1;
+				}
+				else {
+					current_tile = field[y-1][x-1];
+					current_row += current_tile.toString();
+				}
+			}
+			all_rows += current_row + "\n";
+			current_row = "";
 		}
-		return "";
+		
+		return all_rows;
 	}
 }
