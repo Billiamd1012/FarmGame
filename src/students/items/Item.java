@@ -1,6 +1,6 @@
 package students.items;
 
-public abstract class Item {
+public class Item {
     //Every item tracks its age, maturation age, death age, and montery value. 
     int age = 0;
     int maturationAge;
@@ -13,6 +13,13 @@ public abstract class Item {
         this.deathAge = deathAge;
         this.monetaryValue = monetaryValue;
     }
+    public Item(Item original) {
+		this.age = original.age;
+        this.maturationAge = original.maturationAge;
+        this.deathAge = original.deathAge;
+        this.monetaryValue = original.monetaryValue;
+	}
+
     //increases the age variable by 1
     public void tick(){
         age += 1;
@@ -42,5 +49,7 @@ public abstract class Item {
 
     //an abstract function implemented by subclasses returning the string representation of each item.
     @Override
-    public abstract String toString();
+    public String toString(){
+        return "";
+    }
 }

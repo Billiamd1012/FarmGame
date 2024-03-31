@@ -1,5 +1,6 @@
 package students;
 
+import students.items.Food;
 import students.items.Item;
 import students.items.Soil;
 import students.items.UntilledSoil;
@@ -8,8 +9,9 @@ import students.items.Weed;
 public class Field {
 	private Item[][] field;
 	private Item current_tile;
+	private Food current_food;
 	private String current_row;
-	private String all_rows;
+	private String all_rows = "";
 
 	public Field(int height, int width)
 	{
@@ -42,34 +44,65 @@ public class Field {
 	}
 
 	//•	toString() – overridden function prints out a numbered grid with the contents of each location. 
-	//Please note that rows and columns should align as below. 
 	@Override
 	public String toString(){
+
 		//print out each row of items
 		for (int y = 0; y <= field.length; y++){
-			//for first row print out spacer for col count
+			current_row = "";
+			//for first row print out spacer and then col count
 			if (y == 0){
-				current_row += " ";
-			}
-			// else print out row count
-			else{
-				current_row += y;
-			}
-			
-			for (int x = 0; x <= field[y].length; x++){
-				//if first row append col number 
-				if (y == 0){
-					current_row += x + 1;
+				current_row += "  ";
+				for (int x = 1; x <= field[1].length; x++){
+					current_row += x + " ";
 				}
-				else {
-					current_tile = field[y-1][x-1];
-					current_row += current_tile.toString();
+			}
+			// else print out row number and contents of row
+			else{
+				if (y >= 10){
+					current_row += y;
+				}
+				else{
+					current_row += y + " ";
+				}
+		
+				for (int x = 0; x < field[y-1].length; x++){
+					current_tile = field[y-1][x];
+					current_row += current_tile.toString() + " ";
 				}
 			}
 			all_rows += current_row + "\n";
-			current_row = "";
 		}
-		
 		return all_rows;
+	}
+
+	//	till(int, int) – takes in the location in the field to till and turn into new Soil, regardless of what’s there currently.
+	public void till(int x, int y){
+		field[y][x] = new Soil();
+	}
+
+	//	get(int, int) – returns a copy of the item at that location.
+	public Item get(int x, int y){
+		return field[y][x];
+	}
+
+	//	plant(int, int, Item) – stores a given Item at a given location
+	public void plant(int x, int y, Item item){
+		field[y][x] = item;
+	}
+	//	getValue() – returns the total monetary value of each item in the field.
+	public float getValue(){
+		float total_value = 0;
+		for (int y = 0; y < field.length; y++){
+			for (int x = 0; x < field[y].length; x++){
+				current_tile = field[y][x];
+				//if current_tile of subclass food then get value and add to total_value
+				if (current_tile instanceof Food){
+					current_food = (Food) current_tile;
+					total_value += current_food.getValue();
+				}
+			}
+		}
+		return total_value;
 	}
 }
