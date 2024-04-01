@@ -1,13 +1,117 @@
 package students;
+import java.util.Scanner;
+
+import students.items.Food;
+import students.items.Item;
+
 
 public class Farm {
-	
+	private Field field;
+	private int funds;
+	private boolean running = true;
+
 	public Farm(int fieldWidth, int fieldHeight, int startingFunds)
 	{
+		field = new Field(fieldWidth, fieldHeight);
+		funds = startingFunds;
 	}
 	
 	public void run()
 	{
+		Scanner scanner = new Scanner(System.in);
+
+		while (running) {			
+
+			//print a summary of the farm
+			System.out.println("");
+			System.out.println("");
+			System.out.println("");
+
+			System.out.println(field);
+			System.out.println("Bank balance: $" + funds);
+			System.out.println("");
+			//list next actions
+			System.out.println("Enter your next action: ");
+			System.out.println("t x y: till");
+			System.out.println("h x y: harvest");
+			System.out.println("p x y: plant");
+			System.out.println("s: field summary");
+			System.out.println("w: wait");
+			System.out.println("q: quit");
+
+			//read in the next action
+			String action = scanner.nextLine();
+			
+
+			//process the action
+			switch (action.charAt(0)) {
+				case 't':
+					String[] tillStrings = action.split(" ");
+					int tx = Integer.parseInt(tillStrings[1]);
+					int ty = Integer.parseInt(tillStrings[2]);
+					field.till(tx-1, ty-1);
+					field.tick();
+					break;
+
+				case 'h':
+					String[] harvestStrings = action.split(" ");
+					int hx = Integer.parseInt(harvestStrings[1]);
+					int hy = Integer.parseInt(harvestStrings[2]);
+					Item current_tile = field.get(hx-1, hy-1);
+					if (current_tile instanceof Food) {
+						Food food = (Food) current_tile;
+						funds += food.getValue();
+					}
+					field.till(hx-1, hy-1);
+					field.tick();
+					break;
+				case 'p':
+					String[] plantStrings = action.split(" ");
+					int px = Integer.parseInt(plantStrings[1]);
+					int py = Integer.parseInt(plantStrings[2]);
+					//grain cost 1, apples cost 2
+					System.out.println("Enter  ");
+					System.out.println("- 'a' to buy an apple for $2");
+					System.out.println("- 'g' to buy a grain for $1");
+					//read plant type to buy
+					String plant = scanner.nextLine();
+					switch (plant.charAt(0)) {
+						case 'a':
+							if (funds >= 2) {
+								funds -= 2;
+								field.plant(px-1, py-1, new students.items.Apples());
+							}
+							break;
+						case 'g':
+							if (funds >= 1) {
+								funds -= 1;
+								field.plant(px-1, py-1, new students.items.Grain());
+							}
+							break;
+						default:
+							System.out.println("Invalid action. Please enter a valid action.");
+							break;
+					}
+					field.tick();
+					break;
+				case 's':
+					//personal note: I think the user should be able to check the summary without the game progressing so I have chosen to not call field.tick() here
+					System.out.println(field.getSummary());
+					break;
+				case 'w':
+					field.tick();
+					break;
+				case 'q':
+					//print out a summary and exit run loop 
+					System.out.println("Finished the game with a balance of $" + funds);
+					running = false;
+					break;
+				default:
+					System.out.println("Invalid action. Please enter a valid action.");
+				
+			}
+		}
+		scanner.close();
 	}
 	
 }

@@ -1,5 +1,7 @@
 package students;
 
+import students.items.Apples;
+import students.items.Grain;
 import students.items.Food;
 import students.items.Item;
 import students.items.Soil;
@@ -46,7 +48,7 @@ public class Field {
 	//•	toString() – overridden function prints out a numbered grid with the contents of each location. 
 	@Override
 	public String toString(){
-
+		all_rows = "";
 		//print out each row of items
 		for (int y = 0; y <= field.length; y++){
 			current_row = "";
@@ -104,5 +106,51 @@ public class Field {
 			}
 		}
 		return total_value;
+	}
+	//⦁	getSummary() – returns a string representing the quantities and overall value of the field, as shown below. Alignment is important, and remember the Food items only have value if they’re past their maturation age.
+	public String getSummary(){
+		int apple_count = 0;
+		int grain_count = 0;
+		int weed_count = 0;
+		int untilled_soil_count = 0;
+		int soil_count = 0;
+		int total_value = 0;
+		int apple_generations = Apples.getGenerationCount();
+		int grain_generations = Grain.getGenerationCount();
+
+		for (int y = 0; y < field.length; y++){
+			for (int x = 0; x < field[y].length; x++){
+				current_tile = field[y][x];
+				if (current_tile instanceof Food){
+					current_food = (Food) current_tile;
+					if (current_food instanceof Apples){
+						apple_count++;
+					}
+					else{
+						grain_count++;
+					}
+					total_value += current_food.getValue();
+				}
+				else if (current_tile instanceof Weed){
+					weed_count++;
+				}
+				else if (current_tile instanceof UntilledSoil){
+					untilled_soil_count++;
+				}
+				else if (current_tile instanceof Soil){
+					soil_count++;
+				}
+			}
+		}
+
+		return 
+		"Apples:        " + apple_count + 
+		"\nGrain          " + grain_count + 
+		"\nWeeds:         " + weed_count + 
+		"\nUntilled:      " + untilled_soil_count + 
+		"\nSoil:          " + soil_count + 
+		"\nFor a total of " + total_value +
+		"\nTotal apples created: " + apple_generations + 
+		"\nTotal grain created: " + grain_generations;
 	}
 }
