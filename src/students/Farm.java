@@ -23,76 +23,25 @@ public class Farm {
 		while (running) {			
 
 			//print a summary of the farm
-			System.out.println("");
-			System.out.println("");
-			System.out.println("");
-
+			System.out.print("\n\n\n");
 			System.out.println(field);
-			System.out.println("Bank balance: $" + funds);
-			System.out.println("");
+			System.out.print("Bank balance: $" + funds +"\n\n");
 			//list next actions
-			System.out.println("Enter your next action: ");
-			System.out.println("t x y: till");
-			System.out.println("h x y: harvest");
-			System.out.println("p x y: plant");
-			System.out.println("s: field summary");
-			System.out.println("w: wait");
-			System.out.println("q: quit");
+			printNextActions();
 
 			//read in the next action
 			String action = scanner.nextLine();
 			
-
 			//process the action
 			switch (action.charAt(0)) {
 				case 't':
-					String[] tillStrings = action.split(" ");
-					int tx = Integer.parseInt(tillStrings[1]);
-					int ty = Integer.parseInt(tillStrings[2]);
-					field.till(tx-1, ty-1);
-					field.tick();
+					tillAction(action);
 					break;
-
 				case 'h':
-					String[] harvestStrings = action.split(" ");
-					int hx = Integer.parseInt(harvestStrings[1]);
-					int hy = Integer.parseInt(harvestStrings[2]);
-					Item current_tile = field.get(hx-1, hy-1);
-					if (current_tile instanceof Food) {
-						Food food = (Food) current_tile;
-						funds += food.getValue();
-					}
-					field.till(hx-1, hy-1);
-					field.tick();
+					harvestAction(action);
 					break;
 				case 'p':
-					String[] plantStrings = action.split(" ");
-					int px = Integer.parseInt(plantStrings[1]);
-					int py = Integer.parseInt(plantStrings[2]);
-					//grain cost 1, apples cost 2
-					System.out.println("Enter  ");
-					System.out.println("- 'a' to buy an apple for $2");
-					System.out.println("- 'g' to buy a grain for $1");
-					//read plant type to buy
-					String plant = scanner.nextLine();
-					switch (plant.charAt(0)) {
-						case 'a':
-							if (funds >= 2) {
-								funds -= 2;
-								field.plant(px-1, py-1, new students.items.Apples());
-							}
-							break;
-						case 'g':
-							if (funds >= 1) {
-								funds -= 1;
-								field.plant(px-1, py-1, new students.items.Grain());
-							}
-							break;
-						default:
-							System.out.println("Invalid action. Please enter a valid action.");
-							break;
-					}
-					field.tick();
+					plantAction(action);
 					break;
 				case 's':
 					//personal note: I think the user should be able to check the summary without the game progressing so I have chosen to not call field.tick() here
@@ -108,10 +57,70 @@ public class Farm {
 					break;
 				default:
 					System.out.println("Invalid action. Please enter a valid action.");
-				
+					break;
 			}
 		}
 		scanner.close();
 	}
-	
+
+	private void tillAction(String action) {
+		String[] tillStrings = action.split(" ");
+		int tx = Integer.parseInt(tillStrings[1]);
+		int ty = Integer.parseInt(tillStrings[2]);
+		field.till(tx-1, ty-1);
+	}
+
+	private void plantAction(String action) {
+		String[] plantStrings = action.split(" ");
+		int px = Integer.parseInt(plantStrings[1]);
+		int py = Integer.parseInt(plantStrings[2]);
+
+		Scanner scanner = new Scanner(System.in);
+
+		System.out.println("Enter  ");
+		System.out.println("- 'a' to buy an apple for $2");
+		System.out.println("- 'g' to buy a grain for $1");
+		String plant = scanner.nextLine();
+
+		switch (plant.charAt(0)) {
+			case 'a':
+				if (funds >= 2) {
+					funds -= 2;
+					field.plant(px-1, py-1, new students.items.Apples());
+				}
+				break;
+			case 'g':
+				if (funds >= 1) {
+					funds -= 1;
+					field.plant(px-1, py-1, new students.items.Grain());
+				}
+				break;
+			default:
+				System.out.println("Invalid action. Please enter a valid action.");
+				break;
+		}
+		scanner.close();
+	}
+
+	private void harvestAction(String action) {
+		String[] harvestStrings = action.split(" ");
+		int hx = Integer.parseInt(harvestStrings[1]);
+		int hy = Integer.parseInt(harvestStrings[2]);
+		Item currentTile = field.get(hx-1, hy-1);
+		if (currentTile instanceof Food) {
+			Food food = (Food) currentTile;
+			funds += food.getValue();
+		}
+		field.till(hx-1, hy-1);
+	}
+
+	private void printNextActions() {
+		System.out.println("Enter your next action: ");
+		System.out.println("t x y: till");
+		System.out.println("h x y: harvest");
+		System.out.println("p x y: plant");
+		System.out.println("s: field summary");
+		System.out.println("w: wait");
+		System.out.println("q: quit");
+	}
 }
