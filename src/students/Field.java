@@ -14,9 +14,13 @@ public class Field {
 	private Food current_food;
 	private String current_row;
 	private String all_rows = "";
+	private int height;
+	private int width;
 
 	public Field(int height, int width)
 	{
+		this.height = height;
+		this.width = width;
 		//create 2 dimensional array with height and width variables, using soil item.
 		field = new Item[height][width];
 		for (int y = 0; y < field.length; y++){
@@ -25,6 +29,17 @@ public class Field {
 			}
 		}
 	}
+
+	//returns the height of the field.
+	public int getHeight(){
+		return height;
+	}
+	//returns the width of the field.
+	public int getWidth(){
+		return width;
+	}
+
+	
 	//•	tick() – each time this is called, every Item in the field must have it’s tick() function called to increase the age of each item. 
 	public void tick(){
 		for (int y = 0; y < field.length; y++){
